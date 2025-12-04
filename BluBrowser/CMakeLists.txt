@@ -24,7 +24,7 @@ set(CEFSIMPLE_SRCS_MACOSX
   blu_handler_mac.mm
   )
 set(CEFSIMPLE_SRCS_WINDOWS
-  win/blu_ue4_process.exe.manifest
+  win/BluBrowserProcess.exe.manifest
   blu.rc
   blubrowser_win.cpp
   resource.h
@@ -78,10 +78,10 @@ set(CEFSIMPLE_RESOURCES_SRCS
 #
 
 # Target executable names.
-set(CEF_TARGET "blu_ue4_process")
+set(CEF_TARGET "BluBrowserProcess")
 if(OS_MACOSX)
   set(CEF_COMPILER_FLAGS           "${CEF_COMPILER_FLAGS} -mmacosx-version-min=10.7")
-  set(CEF_HELPER_TARGET "blu_ue4_process Helper")
+  set(CEF_HELPER_TARGET "BluBrowserProcess Helper")
 endif()
 
 # Logical target used to link the libcef library.
