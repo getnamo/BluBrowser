@@ -24,7 +24,7 @@ set(CEFSIMPLE_SRCS_MACOSX
   blu_handler_mac.mm
   )
 set(CEFSIMPLE_SRCS_WINDOWS
-  cefsimple.exe.manifest
+  win/blu_ue4_process.exe.manifest
   blu.rc
   blubrowser_win.cpp
   resource.h
@@ -182,10 +182,20 @@ endif()
 #
 
 if(OS_WINDOWS)
+
   # Executable target.
   add_executable(${CEF_TARGET} WIN32 ${CEFSIMPLE_SRCS})
   add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
   target_link_libraries(${CEF_TARGET} libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS})
+
+  target_compile_features(${CEF_TARGET} PRIVATE cxx_std_17)
+  target_include_directories(${CEF_TARGET}
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../.."
+  )
+
+  set_property(TARGET ${CEF_TARGET} PROPERTY
+      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
   if(USE_SANDBOX)
     # Logical target used to link the cef_sandbox library.
@@ -194,7 +204,7 @@ if(OS_WINDOWS)
   endif()
 
   # Add the custom manifest files to the executable.
-  ADD_WINDOWS_MANIFEST("${CEF_TARGET}", "${CEF_TARGET}")
+  ADD_WINDOWS_MANIFEST("${CMAKE_CURRENT_SOURCE_DIR}/win" "${CEF_TARGET}" "exe")
 
   # Copy binary and resource files to the target output directory.
   COPY_FILES("${CEF_TARGET}" "${CEF_BINARY_FILES}" "${CEF_BINARY_DIR}" "${CEF_TARGET_OUT_DIR}")
