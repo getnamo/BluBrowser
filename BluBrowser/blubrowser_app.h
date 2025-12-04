@@ -17,20 +17,20 @@ class BluBrowser : public CefApp,
 
   // CefApp methods:
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler()
-      OVERRIDE { return this; }
+	  override { return this; }
 
   virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler()
-	  OVERRIDE { return this; }
+	  override { return this; }
 
   // CefBrowserProcessHandler methods:
-  virtual void OnContextInitialized() OVERRIDE;
+  virtual void OnContextInitialized() override;
 
  private:
   // Include the default reference counting implementation.
 
   virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
 		 CefRefPtr<CefFrame> frame,
-		 CefRefPtr<CefV8Context> context) OVERRIDE;
+		 CefRefPtr<CefV8Context> context) override;
 
   BluScriptHandler* handler;
 

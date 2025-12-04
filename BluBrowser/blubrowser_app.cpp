@@ -11,7 +11,7 @@
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
 #include "include/wrapper/cef_helpers.h"
-#include "cefsimple/script_handler.h"
+#include "script_handler.h"
 
 BluBrowser::BluBrowser() {
 }
@@ -33,8 +33,10 @@ void BluBrowser::OnContextInitialized() {
 
   // Specify CEF browser settings here.
   CefBrowserSettings browser_settings;
-  browser_settings.file_access_from_file_urls = STATE_ENABLED;
-  browser_settings.universal_access_from_file_urls = STATE_ENABLED;
+
+  //These are now handled in OnBeforeCommandLineProcessing
+  //browser_settings.file_access_from_file_urls = STATE_ENABLED;
+  //browser_settings.universal_access_from_file_urls = STATE_ENABLED;
 
   std::string url;
 
@@ -42,13 +44,20 @@ void BluBrowser::OnContextInitialized() {
   // that instead of the default URL.
   CefRefPtr<CefCommandLine> command_line =
       CefCommandLine::GetGlobalCommandLine();
+  
+  command_line->AppendSwitch("allow-file-access-from-files");
+  //command_line->AppendSwitch("disable-web-security"); //maybe?
+  command_line->AppendSwitch("allow-file-access");
+
   url = command_line->GetSwitchValue("url");
   if (url.empty())
-    url = "about:version";
+  {
+	  url = "about:version";
+  }
 
   // Create the first browser window.
   CefBrowserHost::CreateBrowser(window_info, bluhandler.get(), url,
-                                browser_settings, NULL);
+                                browser_settings, nullptr, nullptr);
 
 }
 

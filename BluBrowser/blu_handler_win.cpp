@@ -16,5 +16,6 @@ void BluHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
   CEF_REQUIRE_UI_THREAD();
 
   CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
-  SetWindowText(hwnd, std::wstring(title).c_str());
+  std::wstring wtitle = title.ToWString();
+  SetWindowTextW(hwnd, wtitle.c_str());
 }

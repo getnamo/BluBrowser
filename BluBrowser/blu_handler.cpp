@@ -1,4 +1,4 @@
-// Some code in this file are Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+﻿// Some code in this file are Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 // Other code Copyright (c) Aaron M. Shea 2014 for the BLUI project
@@ -8,10 +8,13 @@
 #include <sstream>
 #include <string>
 
-#include "include/base/cef_bind.h"
+#include "include/base/cef_callback.h" 
+#include "include/base/cef_bind.h" 
+#include "include/wrapper/cef_closure_task.h"
 #include "include/cef_app.h"
 #include "include/wrapper/cef_closure_task.h"
 #include "include/wrapper/cef_helpers.h"
+#include "include/cef_parser.h"
 
 namespace {
 
@@ -89,19 +92,31 @@ void BluHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   // Display a load error message.
   std::stringstream ss;
   ss << "<html><body bgcolor=\"white\">"
-        "<h2>Failed to load URL " << std::string(failedUrl) <<
-        " with error " << std::string(errorText) << " (" << errorCode <<
-        ").</h2></body></html>";
-  frame->LoadString(ss.str(), failedUrl);
+      << "<h2>Failed to load URL " << std::string(failedUrl)
+      << " with error " << std::string(errorText)
+      << " (" << errorCode << ").</h2></body></html>";
+
+  std::string html = ss.str();
+
+  // Base64 encode → CefString
+  CefString base64 = CefBase64Encode(
+      reinterpret_cast<const void*>(html.data()),
+      html.size());
+
+  // Convert CefString → std::string and build data URL
+  std::string dataUrl = std::string("data:text/html;base64,") +
+      base64.ToString();
+
+  frame->LoadURL(dataUrl);
 }
 
 void BluHandler::CloseAllBrowsers(bool force_close) {
-  if (!CefCurrentlyOn(TID_UI)) {
-    // Execute on the UI thread.
-    CefPostTask(TID_UI,
-        base::Bind(&BluHandler::CloseAllBrowsers, this, force_close));
-    return;
-  }
+    if (!CefCurrentlyOn(TID_UI)) {
+        CefPostTask(TID_UI,
+            base::BindOnce(&BluHandler::CloseAllBrowsers,
+                this, force_close));
+        return;
+    }
 
   if (browser_list_.empty())
     return;
