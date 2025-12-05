@@ -230,3 +230,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 cef_binary*
+cef_src*
