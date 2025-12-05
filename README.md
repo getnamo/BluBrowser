@@ -1,7 +1,9 @@
 # BluBrowser for [BLUI](https://github.com/getnamo/BLUI-unreal)
 
 ## What?
-This is the CEF code of the child process for BLUI. **It's not recommended to mess with this at the moment.** It's a modified CefSimple example to include the blu_event function which notifies BLUI of Javascript events in the UE4 game engine.
+This is the CEF code of the child process for BLUI. It's a modified CefSimple example to include the `blu_event` function which notifies BLUI of Javascript events in the UE4 game engine.
+
+See https://bitbucket.org/chromiumembedded/cef/wiki/Home for general information on CEF.
 
 ## How do I compile this? (Windows only right now)
 * Well, first you need to nab a zip from the [CEF Builds Site](https://cef-builds.spotifycdn.com/index.html)
